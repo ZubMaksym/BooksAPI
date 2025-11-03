@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Publisher } from './publisher.entity';
+import { Author } from './author.entity';
 
 @Entity()
 export class Book {
@@ -11,9 +19,15 @@ export class Book {
   @Column({ nullable: true })
   edition: number;
 
-  @Column('json')
-  publisher: string[];
+  @JoinTable()
+  @ManyToMany(() => Publisher, (publisher) => publisher.books, {
+    cascade: true,
+  })
+  publishers: Publisher[];
 
-  @Column('json')
-  author: string[];
+  @JoinTable()
+  @ManyToMany(() => Author, (author) => author.books, {
+    cascade: true,
+  })
+  authors: Author[];
 }
